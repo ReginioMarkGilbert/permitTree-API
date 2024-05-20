@@ -1,9 +1,9 @@
 const express = require('express');
-const applicationModel = require('../models/application');
+const Application = require('../models/application');
 
 const router = express.Router();
 
-router.get('/createApplication', async (req, res) => {
+router.post('/createApplication', async (req, res) => {
     try {
         const { name, address, phone } = req.query;
         const newApplication = new Application({ name, address, phone });
@@ -23,7 +23,7 @@ router.get('/getApplications', async (req, res) => {
     }
 });
 
-router.get('/updateApplication', async (req, res) => {
+router.put('/updateApplication', async (req, res) => {
     try {
         const { id, name, address, phone } = req.query;
         const updatedApplication = await Application.findByIdAndUpdate(id, { name, address, phone }, { new: true });
@@ -36,7 +36,7 @@ router.get('/updateApplication', async (req, res) => {
     }
 });
 
-router.get('/deleteApplication', async (req, res) => {
+router.delete('/deleteApplication', async (req, res) => {
     try {
         const { id } = req.query;
         const deletedApplication = await Application.findByIdAndDelete(id);
