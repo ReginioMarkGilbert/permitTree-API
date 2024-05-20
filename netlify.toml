@@ -1,1 +1,2 @@
-functions 
+[build]
+    functions = "functions"
