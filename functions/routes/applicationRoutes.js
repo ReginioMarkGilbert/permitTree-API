@@ -3,6 +3,7 @@ const Application = require('../models/application');
 
 const router = express.Router();
 
+// Function to send CORS headers
 const sendCORSHeaders = (res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
