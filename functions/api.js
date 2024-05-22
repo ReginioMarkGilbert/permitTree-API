@@ -7,8 +7,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const db = 'mongodb://localhost:27017/chainsawRegistration';
-// const db = 'mongodb+srv://markgilbert:6jSZ1vskFMjO6VH5@permittreeprototypedb.v3cxfds.mongodb.net/?retryWrites=true&w=majority&appName=PermittreePrototypeDB'
+// const db = 'mongodb://localhost:27017/chainsawRegistration';
+const db = 'mongodb+srv://markgilbert:6jSZ1vskFMjO6VH5@permittreeprototypedb.v3cxfds.mongodb.net/?retryWrites=true&w=majority&appName=PermittreePrototypeDB'
 
 app.use(cors());
 app.use(express.json());
