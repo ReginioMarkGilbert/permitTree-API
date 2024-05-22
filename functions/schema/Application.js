@@ -18,6 +18,26 @@ const applicationSchema = new Schema({
     status: {
         type: String,
         default: 'In Progress'
+    },
+    brand: {
+        type: mongoose.Schema.Types.Mixed,
+        required: true
+    },
+    model: {
+        type: mongoose.Schema.Types.Mixed,
+        required: true
+    },
+    serialNumber: {
+        type: mongoose.Schema.Types.Mixed,
+        required: true
+    },
+    dateOfAcquisition: { 
+        type: Date, 
+        required: true 
+    },
+    powerOutput: { 
+        type: mongoose.Schema.Types.Mixed, 
+        required: true 
     }
 });
 

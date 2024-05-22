@@ -13,8 +13,8 @@ const sendCORSHeaders = (res) => {
 router.post('/createApplication', async (req, res) => {
     sendCORSHeaders(res);
     try {
-        const { name, address, phone } = req.body; // Changed req.query to req.body
-        const newApplication = new Application({ name, address, phone });
+        const { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput} = req.body; // Changed req.query to req.body
+        const newApplication = new Application({ name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput});
         const savedApplication = await newApplication.save();
         res.status(201).json(savedApplication);
     } catch (err) {
@@ -36,8 +36,8 @@ router.put('/updateApplication/:id', async (req, res) => { // Changed req.query 
     sendCORSHeaders(res);
     try {
         const { id } = req.params;
-        const { name, address, phone } = req.body;
-        const updatedApplication = await Application.findByIdAndUpdate(id, { name, address, phone }, { new: true });
+        const { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput } = req.body;
+        const updatedApplication = await Application.findByIdAndUpdate(id, { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput }, { new: true });
         if (!updatedApplication) {
             return res.status(404).json({ error: 'Application not found' });
         }
