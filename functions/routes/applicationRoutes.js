@@ -1,5 +1,8 @@
 const express = require('express');
 const Application = require('../models/application');
+const Notification = require('../models/notification');
+const TreeData = require('../models/treeData');
+const Counter = require('../models/counter');
 
 const router = express.Router();
 
@@ -14,7 +17,7 @@ const sendCORSHeaders = (res) => {
 router.post('/createApplication', async (req, res) => {
     sendCORSHeaders(res);
     try {
-        console.log('Request Body:', req.body); // Log the request body
+        console.log('Request Body:', req.body);
         const { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput, fileNames, store } = req.body;
 
         // Generate custom ID
