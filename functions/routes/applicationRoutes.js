@@ -1,8 +1,8 @@
 const express = require('express');
 const Application = require('../models/application');
-const Notification = require('../models/notification');
-const TreeData = require('../models/treeData');
-const Counter = require('../models/counter');
+const Counter = require('../models/counterModel');
+const TreeData = require('../models/treeDataModel');
+const Counter = require('../models/counterModel');
 
 const router = express.Router();
 
