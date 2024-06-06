@@ -10,14 +10,38 @@ const sendCORSHeaders = (res) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 };
 
+// Start of Selection
 router.post('/createApplication', async (req, res) => {
     sendCORSHeaders(res);
     try {
-        const { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput} = req.body; // Changed req.query to req.body
-        const newApplication = new Application({ name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput});
+        console.log('Request Body:', req.body); // Log the request body
+        const { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput, fileNames, store } = req.body;
+
+        // Generate custom ID
+        const date = new Date().toISOString().split('T')[0].replace(/-/g, '');
+        const counter = await Counter.findOneAndUpdate(
+            { name: 'applicationId' },
+            { $inc: { seq: 1 } },
+            { new: true, upsert: true }
+        );
+        const year = new Date().getFullYear();
+        const customId = `PMDQ-CSAW-${year}-${String(counter.seq).padStart(6, '0')}`;
+
+        const dateOfSubmission = new Date();
+        const newApplication = new Application({
+            customId, name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput, fileNames, store, dateOfSubmission
+        });
         const savedApplication = await newApplication.save();
+
+        const notification = new Notification({
+            message: 'Your application was successfully submitted.'
+        });
+        await notification.save();
+        console.log('Notification created:', notification); // Log the notification
+
         res.status(201).json(savedApplication);
     } catch (err) {
+        console.error('Error:', err);
         res.status(400).json({ error: err.message });
     }
 });
@@ -25,22 +49,38 @@ router.post('/createApplication', async (req, res) => {
 router.get('/getApplications', async (req, res) => {
     sendCORSHeaders(res);
     try {
-        const applications = await Application.find();
+        const { sort } = req.query;
+        let sortOption = {};
+
+        if (sort === 'date-asc') {
+            sortOption = { dateOfSubmission: 1 };
+        } else if (sort === 'date-desc') {
+            sortOption = { dateOfSubmission: -1 };
+        }
+
+        const applications = await Application.find().sort(sortOption);
         res.status(200).json(applications);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 });
 
-router.put('/updateApplication/:id', async (req, res) => { // Changed req.query to req.params
+router.put('/updateApplication/:id', async (req, res) => {
     sendCORSHeaders(res);
     try {
         const { id } = req.params;
-        const { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput } = req.body;
-        const updatedApplication = await Application.findByIdAndUpdate(id, { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput }, { new: true });
+        const { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput, status, fileNames, store } = req.body;
+        const updatedApplication = await Application.findByIdAndUpdate(id, { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput, status, fileNames, store }, { new: true });
         if (!updatedApplication) {
             return res.status(404).json({ error: 'Application not found' });
         }
+
+        const notification = new Notification({
+            message: `Your application status was updated to ${updatedApplication.status}.`
+        });
+        await notification.save();
+        // console.log('Notification created:', notification); // Log the notification
+
         res.status(200).json(updatedApplication);
     } catch (err) {
         res.status(400).json({ error: err.message });
