@@ -61,4 +61,77 @@ router.delete('/deleteApplication/:id', async (req, res) => { // Changed req.que
     }
 });
 
+router.get('/getNotificaions/', async (req, res) => {
+    sendCORSHeaders(res);
+    try {
+        const notifications = await Notification.find();
+        res.status(200).json(notifications);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+})
+
+router.put('/markNotificationAsRead/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const notification = await Notification.findByIdAndUpdate(id, { read: true }, { new: true });
+
+        if (!notification) {
+            return res.status(404).json({ error: 'Notification not found' });
+        }
+
+        res.status(200).json(notification);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+router.get('/getTreeData', async (req, res) => {
+    try {
+        const { timeFrame } = req.query;
+        let match = {};
+
+        if (timeFrame === 'day') {
+            match = { date: { $gte: new Date(new Date().setDate(new Date().getDate() - 1)) } };
+        } else if (timeFrame === 'week') {
+            match = { date: { $gte: new Date(new Date().setDate(new Date().getDate() - 7)) } };
+        } else if (timeFrame === 'month') {
+            match = { date: { $gte: new Date(new Date().setMonth(new Date().getMonth() - 1)) } };
+        } else if (timeFrame === 'year') {
+            match = { date: { $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) } };
+        }
+
+        const treeData = await TreeData.find(match).sort({ date: 1 });
+        res.status(200).json(treeData);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+router.put('/updateTreeData', async (req, res) => {
+    try {
+        const { date, count } = req.body;
+        const updatedTreeData = await TreeData.findOneAndUpdate(
+            { date: new Date(date) },
+            { count },
+            { new: true, upsert: true }
+        );
+        res.status(200).json(updatedTreeData);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+
+router.post('/addTreeData', async(req,res) => {
+    try {
+        const { date, count } = req.body;
+        const newTreeData = new TreeData({ date, count });
+        await newTreeData.save();
+        res.status(201).json(newTreeData);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+})
+
 module.exports = router;
