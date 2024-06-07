@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const applicationSchema = new mongoose.Schema({
+const applicationSchema = new Schema({
     customId: { type: String, unique: true },
     store: { type: mongoose.Schema.Types.Mixed, required: true },
     // Owner details

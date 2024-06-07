@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const treeDataSchema = new mongoose.Schema({
+const treeDataSchema = new Schema({
     date: { type: Date, required: true, unique: true },
     count: { type: Number, required: true }
 });
 
-const TreeData = mongoose.model('TreeData', treeDataSchema);
+// const TreeData = mongoose.model('TreeData', treeDataSchema);
 
-module.exports = TreeData;
+module.exports = treeDataSchema;
+
