@@ -11,9 +11,11 @@ const app = express();
 const db = 'mongodb+srv://starlord:njlbGzq9LKbrw0yO@cluster0.cqtwu1q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 app.use(cors({
-    origin: 'https://permittree-prototype.netlify.app', // or use '*' to allow all origins
+    origin: 'https://permittree-prototype.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    preflightContinue: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
