@@ -6,6 +6,13 @@ const Notification = require('../models/notificationModel');
 
 const router = express.Router();
 
+// CORS headers for all routes
+router.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://permittree-prototype.netlify.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
 // Start of Selection
 router.post('/createApplication', async (req, res) => {
     try {
