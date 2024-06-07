@@ -19,11 +19,60 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
 
 app.use('/.netlify/functions/api', router);
+
+exports.handler = async (event, context) => {
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": event.headers.origin || "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+                "Access-Control-Allow-Credentials": "true"
+            },
+            body: JSON.stringify({})
+        };
+    }
+
+    if (event.httpMethod === 'POST') {
+        try {
+            const data = JSON.parse(event.body);
+            const newApplication = new Application(data);
+            await newApplication.save();
+
+            return {
+                statusCode: 201,
+                headers: {
+                    "Access-Control-Allow-Origin": event.headers.origin || "*",
+                    "Access-Control-Allow-Credentials": "true"
+                },
+                body: JSON.stringify({ message: 'Application created successfully' })
+            };
+        } catch (error) {
+            return {
+                statusCode: 500,
+                headers: {
+                    "Access-Control-Allow-Origin": event.headers.origin || "*",
+                    "Access-Control-Allow-Credentials": "true"
+                },
+                body: JSON.stringify({ error: 'Failed to create application' })
+            };
+        }
+    }
+
+    return {
+        statusCode: 405,
+        headers: {
+            "Access-Control-Allow-Origin": event.headers.origin || "*",
+            "Access-Control-Allow-Credentials": "true"
+        },
+        body: JSON.stringify({ error: 'Method not allowed' })
+    };
+};
 
 module.exports.handler = serverless(app);
