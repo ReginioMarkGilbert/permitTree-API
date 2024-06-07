@@ -6,17 +6,8 @@ const Counter = require('../models/counterModel');
 
 const router = express.Router();
 
-// Function to send CORS headers
-const sendCORSHeaders = (res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://permittree-prototype.netlify.app');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-};
-
 // Start of Selection
 router.post('/createApplication', async (req, res) => {
-    sendCORSHeaders(res);
     try {
         console.log('Request Body:', req.body);
         const { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput, fileNames, store } = req.body;
@@ -51,7 +42,6 @@ router.post('/createApplication', async (req, res) => {
 });
 
 router.get('/getApplications', async (req, res) => {
-    sendCORSHeaders(res);
     try {
         const { sort } = req.query;
         let sortOption = {};
@@ -70,7 +60,6 @@ router.get('/getApplications', async (req, res) => {
 });
 
 router.put('/updateApplication/:id', async (req, res) => {
-    sendCORSHeaders(res);
     try {
         const { id } = req.params;
         const { name, address, phone, brand, model, serialNumber, dateOfAcquisition, powerOutput, status, fileNames, store } = req.body;
@@ -92,7 +81,6 @@ router.put('/updateApplication/:id', async (req, res) => {
 });
 
 router.delete('/deleteApplication/:id', async (req, res) => { // Changed req.query to req.params
-    sendCORSHeaders(res);
     try {
         const { id } = req.params;
         const deletedApplication = await Application.findByIdAndDelete(id);
@@ -106,7 +94,6 @@ router.delete('/deleteApplication/:id', async (req, res) => { // Changed req.que
 });
 
 router.get('/getNotificaions/', async (req, res) => {
-    sendCORSHeaders(res);
     try {
         const notifications = await Notification.find();
         res.status(200).json(notifications);
