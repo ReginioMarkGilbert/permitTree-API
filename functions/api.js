@@ -26,7 +26,7 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
 
-app.use('/api', router);
+app.use('/.netlify/functions/api', router);
 
 router.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://permittree-prototype.netlify.app');
