@@ -151,7 +151,7 @@ router.put('/updateTreeData', async (req, res) => {
         const { date, count } = req.body;
         const updatedTreeData = await TreeData.findOneAndUpdate(
             { date: new Date(date) },
-            { count },
+            { $inc: { count: count } },
             { new: true, upsert: true }
         );
         res.status(200).json(updatedTreeData);
