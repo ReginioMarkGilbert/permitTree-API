@@ -6,7 +6,8 @@ const cors = require('cors');
 
 const app = express();
 
-const db = 'mongodb+srv://starlord:njlbGzq9LKbrw0yO@cluster0.cqtwu1q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// const db = 'mongodb+srv://starlord:njlbGzq9LKbrw0yO@cluster0.cqtwu1q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const db = 'mongodb+srv://markgilbert:TwkMFmLo9mSWxZeW@permittreeprototypedb.v3cxfds.mongodb.net/?retryWrites=true&w=majority&appName=PermittreePrototypeDB'
 
 const corsOptions = {
     origin: 'https://permittree-prototype.netlify.app',
